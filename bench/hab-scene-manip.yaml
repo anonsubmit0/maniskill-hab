@@ -1,0 +1,112 @@
+# @package _global_
+
+defaults:
+  - /habitat: habitat_config_base
+
+  - /habitat/simulator: rearrange_sim
+  - /habitat/simulator/agents@habitat.simulator.agents.main_agent: agent_base
+  - /habitat/simulator/sim_sensors@habitat.simulator.agents.main_agent.sim_sensors.head_depth_sensor: head_depth_sensor
+  - /habitat/simulator/sim_sensors@habitat.simulator.agents.main_agent.sim_sensors.head_rgb_sensor: head_rgb_sensor
+  - /habitat/simulator/sim_sensors@habitat.simulator.agents.main_agent.sim_sensors.arm_depth_sensor: arm_depth_sensor
+  - /habitat/simulator/sim_sensors@habitat.simulator.agents.main_agent.sim_sensors.arm_rgb_sensor: arm_rgb_sensor
+
+  - /habitat/task: task_config_base
+  - /habitat/task/rearrange/actions: fetch_suction_arm_base
+  - /habitat/task/measurements:
+    - articulated_agent_force
+    - articulated_agent_colls
+    - force_terminate
+    - end_effector_to_rest_distance
+    - end_effector_to_object_distance
+    - did_pick_object
+    - pick_success
+    - pick_reward
+    - did_violate_hold_constraint
+    - num_steps
+  - /habitat/task/lab_sensors:
+    - target_start_sensor
+    - joint_sensor
+    - is_holding_sensor
+    - end_effector_sensor
+    - relative_resting_pos_sensor
+    
+  - /habitat/dataset/rearrangement: replica_cad
+  - _self_
+
+habitat:
+  environment:
+    # Number of steps within an episode.
+    max_episode_steps: 200
+    iterator_options:
+      cycle: True
+      shuffle: True
+      group_by_scene: True
+      num_episode_sample: -1
+      max_scene_repeat_episodes: -1
+      max_scene_repeat_steps: -1
+      step_repetition_range: 0.2
+  task:
+    type: RearrangePickTask-v0
+    base_angle_noise: 0.523599
+    constraint_violation_ends_episode: False
+    constraint_violation_drops_object: True
+    reward_measure: "pick_reward"
+    success_measure: "pick_success"
+    success_reward: 10.0
+    slack_reward: -0.005
+    end_on_success: False
+    # Measurements
+    measurements:
+      force_terminate:
+        max_accum_force: 1_000_000_000_000_000.0
+        max_instant_force: 1_000_000_000_000_000.0
+
+  simulator:
+    type: RearrangeSim-v0
+    additional_object_paths:
+      - "data/objects/ycb/configs/"
+    debug_render: False
+    ##########################################################################################
+    # HAB Simulation Optimizations
+    concur_render: False
+    auto_sleep: True
+    ##########################################################################################
+    agents:
+      main_agent:
+        sim_sensors:
+          head_depth_sensor:
+            height: 128
+            width: 128
+          head_rgb_sensor:
+            height: 128
+            width: 128
+          arm_depth_sensor:
+            height: 128
+            width: 128
+          arm_rgb_sensor:
+            height: 128
+            width: 128
+        articulated_agent_urdf: ./data/robots/hab_fetch/robots/hab_fetch.urdf
+        articulated_agent_type: "FetchRobot"
+
+    # Agent setup
+    # ARM_REST: [0.6, 0.0, 0.9]
+    ctrl_freq: 100.0
+    ac_freq_ratio: 5
+
+    # Grasping
+    hold_thresh: 0.09
+    grasp_impulse: 1000.0
+
+    habitat_sim_v0:
+      gpu_device_id: 0
+      gpu_gpu: False
+      allow_sliding: True
+      enable_physics: True
+      physics_config_file: ./data/default.physics_config.json
+  dataset:
+    type: RearrangeDataset-v0
+    split: train
+    # The dataset to use. Later we will generate our own dataset.
+    scenes_dir: "data/replica_cad/"
+    data_path: data/datasets/replica_cad/rearrange/v1/{split}/tidy_house_10k_1k.json.gz
