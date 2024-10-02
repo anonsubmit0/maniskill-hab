@@ -10,7 +10,7 @@ However, at the time of this release, the demonstration dataset (~500GB) is uplo
 
 ## Installation
 
-To set up, please run the following steps:
+To set up, please run the below steps. Please note that `git lfs` is needed for this version of the repo.
 ```
 conda create -n mshab python=3.9
 conda activate mshab
@@ -32,6 +32,8 @@ pip install tensorboard \
     IPython
 
 bash anonymized_asset_download/download_asset.sh
+
+git lfs pull
 ```
 
 For benchmarking, please see the steps listed in [bench/README.md](./bench/README.md).
