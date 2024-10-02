@@ -232,7 +232,7 @@ def interact_bench():
 
     preloaded_actions_fp = (
         ASSET_DIR
-        / "scene_datasets/eplica_cad_dataset/rearrange/hab2_bench_assets/interact_bench_actions.txt"
+        / "scene_datasets/replica_cad_dataset/rearrange/hab2_bench_assets/interact_bench_actions.txt"
     )
     with open(preloaded_actions_fp, "rb") as f:
         preloaded_actions = np.load(f)
