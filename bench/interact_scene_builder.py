@@ -34,7 +34,7 @@ class ReplicaCADInteractSceneBuilder(SceneBuilder):
 
         with gzip.open(
             ASSET_DIR
-            / "scene_datasets/replica_cad_dataset/hab2_bench_assets/bench_scene.json.gz",
+            / "scene_datasets/eplica_cad_dataset/rearrange/hab2_bench_assets/bench_scene.json.gz",
             "rt",
             encoding="utf-8",
         ) as f:
