@@ -42,7 +42,7 @@ class ReplicaCADInteractSceneBuilder(SceneBuilder):
 
         with open(
             ASSET_DIR
-            / "scene_datasets/replica_cad_dataset"
+            / "scene_datasets/replica_cad_dataset/rearrange"
             / Path("/".join(self.interact_config["scene_id"].split("/")[1:])),
             "r",
         ) as f:
@@ -67,7 +67,7 @@ class ReplicaCADInteractSceneBuilder(SceneBuilder):
         )
         bg_path = str(
             ASSET_DIR
-            / "scene_datasets/replica_cad_dataset"
+            / "scene_datasets/replica_cad_dataset/rearrange"
             / f"hab2_bench_assets/stages/{background_template_name}.glb"
         )
         builder = self.scene.create_actor_builder()
@@ -89,7 +89,7 @@ class ReplicaCADInteractSceneBuilder(SceneBuilder):
             pos = articulated_meta["translation"]
             rot = articulated_meta["rotation"]
             urdf_path = osp.join(
-                ASSET_DIR / "scene_datasets/replica_cad_dataset",
+                ASSET_DIR / "scene_datasets/replica_cad_dataset/rearrange",
                 f"hab2_bench_assets/urdf/{template_name}/{template_name}.urdf",
             )
             urdf_loader = self.scene.create_urdf_loader()
