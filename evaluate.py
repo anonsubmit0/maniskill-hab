@@ -374,21 +374,9 @@ def eval(cfg: EvalConfig):
                             max=len(uenv.task_plan) - 1,
                         )
                     )
-                    print(
-                        [
-                            int(
-                                uenv.subtask_articulations[
-                                    min(subtask_num + 1, len(uenv.task_plan) - 1)
-                                ]
-                                is not None
-                            )
-                            for subtask_num in uenv.subtask_pointer
-                        ]
-                    )
                     for subtask_num in currently_running_nav_subtasks:
                         next_subtask_num = min(subtask_num + 1, len(uenv.task_plan) - 1)
                         _next_subtask_type = uenv.task_ids[next_subtask_num]
-                        print("_next_subtask_type", _next_subtask_type)
                         _subtask_obj: Actor = uenv.subtask_objs[subtask_num]
                         if _subtask_obj is not None:
                             _subtask_obj_raw_pose = curr_subtask_obj_raw_poses[
@@ -428,7 +416,6 @@ def eval(cfg: EvalConfig):
                                     or next_subtask_articulation.links is not None
                                 )
                             ):
-                                print(subtask_env_num, "square spawn")
                                 # NOTE (anonymous): this first case covers prepare_groceries picking from fridge
                                 if "fridge" in next_subtask_articulation._objs[0].name:
                                     next_subtask_articulation_rel_spawn_pose = (
@@ -494,7 +481,6 @@ def eval(cfg: EvalConfig):
                                     & (env_navigable_positions[:, 1] <= ymax)
                                 )
                             else:
-                                print(subtask_env_num, "circle spawn")
                                 positions_wrt_center = (
                                     env_navigable_positions
                                     - uenv.subtask_goals[subtask_num].pose.p[
@@ -757,16 +743,6 @@ def eval(cfg: EvalConfig):
                                 ] = _subtask_obj_angular_velocity[
                                     subtask_envs_with_invalid_spawns
                                 ].clone()
-
-                                print(obj_force)
-                            print(
-                                acceptable_spawn,
-                                robot_force,
-                                dist_from_goal,
-                                rot_from_goal,
-                                dist_from_navigable_position,
-                                flush=True,
-                            )
 
                             subtask_env_has_invalid_spawn[acceptable_spawn] = False
 
